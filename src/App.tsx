@@ -1,3 +1,5 @@
+import { Form } from "./components/form";
+
 export const App = () => {
-  return <div>App</div>;
+  return <Form />;
 };
