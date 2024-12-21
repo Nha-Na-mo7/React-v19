@@ -8,8 +8,8 @@ export const PostalCodeInputs: FC<Props> = ({ onChange }) => {
   return (
     <div>
       <span>〒</span>
-      <input name="firstPostalCode" onChange={onChange} /> -{" "}
-      <input name="lastPostalCode" onChange={onChange} />
+      <input name="firstCode" onChange={onChange} /> -{" "}
+      <input name="lastCode" onChange={onChange} />
     </div>
   );
 };

@@ -1,9 +1,16 @@
 import { ChangeEventHandler, useState } from "react";
 import { searchAddress } from "../../modules/searchAddress";
 
-const DUMMY_ADDRESS = "9800001";
+type PostalCode = {
+  firstCode: string;
+  lastCode: string;
+};
 
 export const useSearchAddress = () => {
+  const [postalCode, setPostalCode] = useState<PostalCode>({
+    firstCode: "",
+    lastCode: "",
+  });
   const [isApiError, setIsApiError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [fetchedMunicipalitiesName, setFetchedMunicipalitiesName] =
@@ -13,12 +20,10 @@ export const useSearchAddress = () => {
   const [fetchedPrefectureName, setFetchedPrefectureName] =
     useState<string>("");
 
-  const handleSearchAddress = async () => {
+  const handleSearchAddress = async (postalCode: string) => {
     try {
-      const data = await searchAddress(DUMMY_ADDRESS);
+      const data = await searchAddress(postalCode);
       const { municipalitiesName, prefCode, prefectureName } = data;
-
-      console.log(data);
 
       setFetchedMunicipalitiesName(municipalitiesName);
       // TODO 型定義してas typeを避ける
@@ -31,9 +36,32 @@ export const useSearchAddress = () => {
     }
   };
 
-  const onChangeSearchAddress: ChangeEventHandler<HTMLInputElement> = () => {
-    handleSearchAddress();
-    console.log(fetchedMunicipalitiesName);
+  const validatePostalCode: (postalCode: PostalCode) => boolean = (
+    postalCode
+  ) => {
+    const { firstCode, lastCode } = postalCode;
+    if (firstCode.length !== 3 || lastCode.length !== 4) {
+      return false;
+    }
+    setErrorMessage("");
+    return true;
+  };
+
+  const onChangeSearchAddress: ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
+    const { name, value } = event.target;
+    const newPostalCode = {
+      ...postalCode,
+      [name]: value,
+    };
+
+    setPostalCode(newPostalCode);
+    if (validatePostalCode(newPostalCode)) {
+      await handleSearchAddress(
+        `${newPostalCode.firstCode}${newPostalCode.lastCode}`
+      );
+    }
   };
 
   return {
