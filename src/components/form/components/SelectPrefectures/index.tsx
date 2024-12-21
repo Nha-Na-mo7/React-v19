@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Prefectures } from "../../const/Prefectures";
+import { Prefectures } from "../../../../const/Prefectures";
 
 type Props = {
   selectedPrefectureCode: `${number}`;
