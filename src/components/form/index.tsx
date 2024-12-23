@@ -1,56 +1,37 @@
 import { FC } from "react";
-import { Prefectures } from "../../const/Prefectures";
+import { SelectPrefectures } from "./components/SelectPrefectures";
+import { ErrorMessage } from "./components/ErrorMessage";
+import { PostalCodeInputs } from "./components/PostalCodeInputs";
+
+// dummy const
+const selectedPrefectureCode = "0";
+const isError = false;
+const errorMessage = "色々エラーになりました";
 
 export const Form: FC = (props) => {
   return (
-    <form name="address">
+    <form name="address" style={{}}>
       <table>
         <tbody>
+          {isError && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <tr>
-            <th>
-              <p style={{ color: "red" }} className="errorMessage">
-                色々失敗しました。
-              </p>
-              <span>郵便番号</span>
-              <span className="fieldRequiredLabel">必須</span>
-            </th>
+            <th>郵便番号</th>
             <td>
-              <div>
-                <span>〒</span>
-                <div>
-                  <input type="text" />
-                  -
-                  <input type="text" />
-                </div>
-              </div>
+              <PostalCodeInputs onChange={() => {}} />
             </td>
           </tr>
           <tr>
-            <th>
-              <span>都道府県名</span>
-              <span className="fieldRequiredLabel">必須</span>
-            </th>
+            <th>都道府県名</th>
             <td>
-              <select name="prefecture">
-                <option hidden>都道府県を選択してください</option>
-                {Prefectures.map((prefecture) => {
-                  const { prefectureCode, prefectureName } = prefecture;
-                  return (
-                    <option key={prefectureName} value={prefectureCode}>
-                      {prefectureName}
-                    </option>
-                  );
-                })}
-              </select>
+              <SelectPrefectures
+                selectedPrefectureCode={selectedPrefectureCode}
+              />
             </td>
           </tr>
           <tr>
-            <th>
-              <span>市区町村名</span>
-              <span className="fieldRequiredLabel">必須</span>
-            </th>
+            <th>市区町村名</th>
             <td>
-              <input type="text" />
+              <input style={{ width: "100%" }} name="citiesInput" />
             </td>
           </tr>
         </tbody>
