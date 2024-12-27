@@ -14,8 +14,10 @@ export const searchAddress: SearchAddress = async (postalCode) => {
     .then((data) => data.json())
     .catch(() => new Error(`APIが落ちました`));
 
-  const { address1, address2, address3, prefcode } =
-    response.results && response.results[0];
+  if (!response.results) {
+    throw new Error("そんな郵便番号はないです^^");
+  }
+  const { address1, address2, address3, prefcode } = response.results[0];
 
   const data: Address = {
     prefCode: prefcode,
