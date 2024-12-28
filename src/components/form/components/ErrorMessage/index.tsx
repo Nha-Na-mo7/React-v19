@@ -1,9 +1,9 @@
-import { FC } from "react";
+import { CSSProperties, ComponentPropsWithoutRef, FC } from "react";
 
-type Props = {
-  children: string;
+const pStyle: CSSProperties = {
+  color: "red",
 };
 
-export const ErrorMessage: FC<Props> = ({ children }) => {
-  return <p style={{ color: "red" }}>{children}</p>;
+export const ErrorMessage: FC<ComponentPropsWithoutRef<"p">> = (props) => {
+  return <p style={pStyle}>{props.children}</p>;
 };
