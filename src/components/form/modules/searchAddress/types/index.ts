@@ -5,17 +5,12 @@ type Results = {
   kana1: string;
   kana2: string;
   kana3: string;
-  prefcode: `${number}`;
-  zipcode: `${number}`;
+  prefcode: string;
+  zipcode: string;
 };
-type ErrorResponse = {
-  message: string;
-  results: null;
-  status: 400 | 500;
+
+export type SearchAddressResponse = {
+  message: string | null;
+  results: Results[] | null;
+  status: number;
 };
-type SuccessResponse = {
-  message: null;
-  results: Results[];
-  status: 200;
-};
-export type SearchAddressResponse = ErrorResponse | SuccessResponse;
