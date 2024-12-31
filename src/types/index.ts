@@ -6,3 +6,8 @@ export type Address = {
   prefectureName: string;
   municipalitiesName: string;
 };
+
+/**
+ * 都道府県
+ */
+export type Prefecture = Pick<Address, "prefectureCode" | "prefectureName">;
