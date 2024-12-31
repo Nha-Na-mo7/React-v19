@@ -1,7 +1,4 @@
-type Prefecture = {
-  prefectureCode: `${number}`;
-  prefectureName: string;
-};
+import { Prefecture } from "../../types";
 
 // 都道府県リストの形で取得できそうなAPIが見つからないのでベタ書き。見つかり次第差し替え
 export const Prefectures = [
