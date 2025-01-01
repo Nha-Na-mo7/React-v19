@@ -1,15 +1,43 @@
-import { ChangeEventHandler, FC } from "react";
+import { CSSProperties, ChangeEventHandler, FC, RefObject } from "react";
+import { Input } from "../Input";
 
 type Props = {
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  handleChange: ChangeEventHandler<HTMLInputElement>;
+  postalCodeReferences: {
+    firstReference: RefObject<HTMLInputElement | null>;
+    lastReference: RefObject<HTMLInputElement | null>;
+  };
 };
 
-export const PostalCodeInputs: FC<Props> = ({ onChange }) => {
+const containerStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  width: "30%",
+};
+
+export const PostalCodeInput: FC<Props> = (props) => {
+  const {
+    handleChange,
+    postalCodeReferences: { firstReference, lastReference },
+  } = props;
   return (
-    <div>
+    <div style={containerStyle}>
       <span>〒</span>
-      <input name="firstCode" onChange={onChange} /> -{" "}
-      <input name="lastCode" onChange={onChange} />
+      <div style={containerStyle}>
+        <Input
+          name="firstPostalCode"
+          ref={firstReference}
+          size={3}
+          onChange={handleChange}
+        />
+        -
+        <Input
+          name="latterPostalCode"
+          ref={lastReference}
+          size={4}
+          onChange={handleChange}
+        />
+      </div>
     </div>
   );
 };
