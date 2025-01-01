@@ -1,4 +1,4 @@
-import { SearchAddressResponse } from "../../components/form/modules/searchAddress/types";
+import { SearchAddressResponse } from "../../components/Form/modules/searchAddress/types";
 import { ZodType, z } from "zod";
 
 const resultsSchema = z.array(
