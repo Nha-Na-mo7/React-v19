@@ -4,6 +4,7 @@ import { Input } from "../Input";
 type Props = {
   handleChange: ChangeEventHandler<HTMLInputElement>;
   postalCodeReferences: {
+    // React19 MutableRefObject は非推奨に
     firstReference: RefObject<HTMLInputElement | null>;
     lastReference: RefObject<HTMLInputElement | null>;
   };
