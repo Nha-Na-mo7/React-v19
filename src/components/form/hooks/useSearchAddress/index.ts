@@ -1,72 +1,65 @@
 import { ChangeEventHandler, useRef, useState } from "react";
 import { searchAddress } from "../../modules/searchAddress";
+import { PresentationalProps } from "../../types";
+import {
+  firstPostalCodeSchema,
+  lastPostalCodeSchema,
+} from "../../../../schemas/postalCode";
 
-type PostalCode = {
-  firstCode: string;
-  lastCode: string;
-};
+type UseSearchAddress = () => PresentationalProps;
 
-export const useSearchAddress = () => {
-  const [postalCode, setPostalCode] = useState<PostalCode>({
-    firstCode: "",
-    lastCode: "",
-  });
-
+export const useSearchAddress: UseSearchAddress = () => {
   const [hasApiError, setHasApiError] = useState(false);
   const [hasValidationError, setHasValidationError] = useState(false);
-  const [prefectureId, setPrefectureId] = useState("");
+  const [prefectureCode, setPrefectureCode] = useState("");
   const [municipalitiesName, setMunicipalitiesName] = useState("");
-  const firstHalfReference = useRef<HTMLInputElement>(null);
-  const latterHalfReference = useRef<HTMLInputElement>(null);
 
-  const handleSearchAddress = async (postalCode: string) => {
-    try {
-      const data = await searchAddress(postalCode);
-      const { municipalitiesName, prefectureCode, prefectureName } = data;
+  const firstReference = useRef<HTMLInputElement>(null);
+  const lastReference = useRef<HTMLInputElement>(null);
 
-      setMunicipalitiesName(municipalitiesName);
-      setPrefectureCode(prefectureCode);
-      setPrefectureName(prefectureName);
-      setIsApiError(false);
-    } catch (error) {
-      setIsApiError(true);
-      setErrorMessage(`${error}`);
+  const handleChangePostalCode: ChangeEventHandler<
+    HTMLInputElement
+  > = async () => {
+    setHasValidationError(false);
+    setHasApiError(false);
+
+    const firstValidationResult = firstPostalCodeSchema.safeParse(
+      firstReference.current?.value
+    );
+    const lastValidationResult = lastPostalCodeSchema.safeParse(
+      lastReference.current?.value
+    );
+    const isValid =
+      firstValidationResult.success && lastValidationResult.success;
+    if (!isValid) {
+      setHasValidationError(true);
+      return;
     }
-  };
 
-  const validatePostalCode: (postalCode: PostalCode) => boolean = (
-    postalCode
-  ) => {
-    const { firstCode, lastCode } = postalCode;
-    if (firstCode.length !== 3 || lastCode.length !== 4) {
-      return false;
-    }
-    return true;
-  };
+    const { data: firstCode } = firstValidationResult;
+    const { data: lastCode } = lastValidationResult;
 
-  const onChangeSearchAddress: ChangeEventHandler<HTMLInputElement> = async (
-    event
-  ) => {
-    const { name, value } = event.target;
-    const newPostalCode = {
-      ...postalCode,
-      [name]: value,
-    };
-
-    setPostalCode(newPostalCode);
-    if (validatePostalCode(newPostalCode)) {
-      await handleSearchAddress(
-        `${newPostalCode.firstCode}${newPostalCode.lastCode}`
-      );
-    }
+    await searchAddress(`${firstCode}${lastCode}`)
+      .then((result) => {
+        if (result.isSuccess) {
+          setPrefectureCode(result.data.prefectureCode);
+          setMunicipalitiesName(result.data.municipalitiesName);
+          return;
+        }
+        setHasApiError(true);
+      })
+      .catch(() => setHasApiError(true));
   };
 
   return {
-    isApiError,
-    errorMessage,
-    MunicipalitiesName,
-    PrefectureCode,
-    PrefectureName,
-    onChangeSearchAddress,
+    handleChangePostalCode,
+    hasApiError,
+    hasValidationError,
+    municipalitiesName,
+    prefectureCode,
+    postalCodeReferences: {
+      firstReference,
+      lastReference,
+    },
   };
 };
