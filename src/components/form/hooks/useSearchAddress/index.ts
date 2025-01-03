@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useRef, useState } from "react";
 import { searchAddress } from "../../modules/searchAddress";
 
 type PostalCode = {
@@ -11,24 +11,22 @@ export const useSearchAddress = () => {
     firstCode: "",
     lastCode: "",
   });
-  const [isApiError, setIsApiError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [fetchedMunicipalitiesName, setFetchedMunicipalitiesName] =
-    useState<string>("");
-  const [fetchedPrefectureCode, setFetchedPrefectureCode] =
-    useState<`${number}`>("0");
-  const [fetchedPrefectureName, setFetchedPrefectureName] =
-    useState<string>("");
+
+  const [hasApiError, setHasApiError] = useState(false);
+  const [hasValidationError, setHasValidationError] = useState(false);
+  const [prefectureId, setPrefectureId] = useState("");
+  const [municipalitiesName, setMunicipalitiesName] = useState("");
+  const firstHalfReference = useRef<HTMLInputElement>(null);
+  const latterHalfReference = useRef<HTMLInputElement>(null);
 
   const handleSearchAddress = async (postalCode: string) => {
     try {
       const data = await searchAddress(postalCode);
-      const { municipalitiesName, prefCode, prefectureName } = data;
+      const { municipalitiesName, prefectureCode, prefectureName } = data;
 
-      setFetchedMunicipalitiesName(municipalitiesName);
-      // TODO 型定義してas typeを避ける
-      setFetchedPrefectureCode(prefCode as `${number}`);
-      setFetchedPrefectureName(prefectureName);
+      setMunicipalitiesName(municipalitiesName);
+      setPrefectureCode(prefectureCode);
+      setPrefectureName(prefectureName);
       setIsApiError(false);
     } catch (error) {
       setIsApiError(true);
@@ -43,7 +41,6 @@ export const useSearchAddress = () => {
     if (firstCode.length !== 3 || lastCode.length !== 4) {
       return false;
     }
-    setErrorMessage("");
     return true;
   };
 
@@ -67,9 +64,9 @@ export const useSearchAddress = () => {
   return {
     isApiError,
     errorMessage,
-    fetchedMunicipalitiesName,
-    fetchedPrefectureCode,
-    fetchedPrefectureName,
+    MunicipalitiesName,
+    PrefectureCode,
+    PrefectureName,
     onChangeSearchAddress,
   };
 };
