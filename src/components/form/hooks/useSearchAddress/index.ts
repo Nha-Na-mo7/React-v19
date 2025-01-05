@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useRef, useState } from "react";
+import { ChangeEventHandler, useRef, useState, useTransition } from "react";
 import { searchAddress } from "../../modules/searchAddress";
 import { PresentationalProps } from "../../types";
 import {
@@ -9,6 +9,8 @@ import {
 type UseSearchAddress = () => PresentationalProps;
 
 export const useSearchAddress: UseSearchAddress = () => {
+  const [isLoading, startTransition] = useTransition();
+
   const [hasApiError, setHasApiError] = useState(false);
   const [hasValidationError, setHasValidationError] = useState(false);
   const [prefectureCode, setPrefectureCode] = useState("");
@@ -53,6 +55,7 @@ export const useSearchAddress: UseSearchAddress = () => {
 
   return {
     handleChangePostalCode,
+    isLoading,
     hasApiError,
     hasValidationError,
     municipalitiesName,

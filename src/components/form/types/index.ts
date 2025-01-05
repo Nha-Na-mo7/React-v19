@@ -9,6 +9,7 @@ export type PresentationalProps = Pick<
   Address,
   "municipalitiesName" | "prefectureCode"
 > & {
+  isLoading: boolean;
   hasApiError: boolean;
   hasValidationError: boolean;
   handleChangePostalCode: ChangeEventHandler<HTMLInputElement>;

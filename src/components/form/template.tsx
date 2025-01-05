@@ -14,6 +14,7 @@ import { ErrorMessage } from "./components/ErrorMessage";
  */
 export const FormTemplate: FC<PresentationalProps> = (props) => {
   const {
+    isLoading,
     municipalitiesName,
     prefectureCode,
     hasApiError,
@@ -43,7 +44,10 @@ export const FormTemplate: FC<PresentationalProps> = (props) => {
               <FieldRequiredLabel />
             </TableHeaderCell>
             <td>
-              <SelectPrefectures selectedPrefectureCode={prefectureCode} />
+              <SelectPrefectures
+                isLoading={isLoading}
+                selectedPrefectureCode={prefectureCode}
+              />
             </td>
           </TableRow>
           <TableRow>
@@ -52,7 +56,14 @@ export const FormTemplate: FC<PresentationalProps> = (props) => {
               <FieldRequiredLabel />
             </TableHeaderCell>
             <td>
-              <Input name="municipalities" defaultValue={municipalitiesName} />
+              {isLoading ? (
+                "Loading..."
+              ) : (
+                <Input
+                  name="municipalities"
+                  defaultValue={municipalitiesName}
+                />
+              )}
             </td>
           </TableRow>
         </tbody>

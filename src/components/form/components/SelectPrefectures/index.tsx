@@ -3,6 +3,7 @@ import { Prefectures } from "../../../../const/Prefectures";
 import { Prefecture } from "../../../../types";
 
 type Props = {
+  isLoading: boolean;
   selectedPrefectureCode: string;
 };
 
@@ -16,8 +17,12 @@ const getCurrentPrefectureCode = (
   return selected ?? "";
 };
 
-export const SelectPrefectures: FC<Props> = ({ selectedPrefectureCode }) => {
-  return (
+export const SelectPrefectures: FC<Props> = (props) => {
+  const { isLoading, selectedPrefectureCode } = props;
+
+  return isLoading ? (
+    "Loading..."
+  ) : (
     <select
       name="prefecture"
       defaultValue={getCurrentPrefectureCode(
