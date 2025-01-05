@@ -41,16 +41,18 @@ export const useSearchAddress: UseSearchAddress = () => {
     const { data: firstCode } = firstValidationResult;
     const { data: lastCode } = lastValidationResult;
 
-    await searchAddress(`${firstCode}${lastCode}`)
-      .then((result) => {
-        if (result.isSuccess) {
-          setPrefectureCode(result.data.prefectureCode);
-          setMunicipalitiesName(result.data.municipalitiesName);
-          return;
-        }
-        setHasApiError(true);
-      })
-      .catch(() => setHasApiError(true));
+    startTransition(async () => {
+      await searchAddress(`${firstCode}${lastCode}`)
+        .then((result) => {
+          if (result.isSuccess) {
+            setPrefectureCode(result.data.prefectureCode);
+            setMunicipalitiesName(result.data.municipalitiesName);
+            return;
+          }
+          setHasApiError(true);
+        })
+        .catch(() => setHasApiError(true));
+    });
   };
 
   return {
